@@ -1,0 +1,21 @@
+{
+  "name": "vac-platform",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 4174",
+    "build": "next build",
+    "start": "next start -p 4174",
+    "start:legacy": "node serve.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "dependencies": {
+    "next": "16.4.0",
+    "nodemailer": "^10.1.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  }
+}

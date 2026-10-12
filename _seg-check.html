@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><title>seg check (temporary)</title>
+<style>body{margin:0;background:#222;color:#fff;font:11px monospace;display:flex;flex-wrap:wrap;gap:6px;padding:6px}figure{margin:0;position:relative}canvas{display:block;width:200px;height:356px}figcaption{position:absolute;left:4px;top:2px}</style>
+<iframe src="/" style="position:absolute;left:-9999px;width:1280px;height:900px"></iframe>
+<script>
+const f = document.querySelector("iframe");
+f.addEventListener("load", async () => {
+  const w = f.contentWindow;
+  while (!w.vacCalculator) await new Promise(r => setTimeout(r, 100));
+  const C = w.vacCalculator, names = C.regions;
+  const hue = id => { const base = id.replace(/^(right|left)/, ""); const order = ["head","neck","chest","abdomen","upperBack","lowerBack","Shoulder","UpperArm","Elbow","Forearm","Wrist","Hand","Hip","Thigh","Knee","LowerLeg","Ankle","Foot"]; const k = order.indexOf(base); return [(k * 137) % 360, id.startsWith("left") ? 45 : 70]; };
+  const frames = ["000-front","045-front-right","090-right","135-right-rear","180-back","270-left","315-front-left"];
+  const idx = [0, 2, 4, 6, 7, 10, 11];
+  for (let n = 0; n < idx.length; n++) {
+    const s = await C.segmentationOf(idx[n]);
+    const img = new Image(); img.src = `assets/turntable/body/${frames[n]}.webp`; await img.decode();
+    const c = document.createElement("canvas"); c.width = s.width; c.height = s.SH; const x = c.getContext("2d");
+    x.globalAlpha = .35; x.drawImage(img, 0, 0, s.width, s.SH); x.globalAlpha = 1;
+    const d = x.getImageData(0, 0, s.width, s.SH);
+    for (let i = 0; i < s.lab.length; i++) { const v = s.lab[i]; if (!v) continue; const [h, l] = hue(names[v]); const rgb = hsl(h, 80, l); d.data[i*4] = rgb[0]; d.data[i*4+1] = rgb[1]; d.data[i*4+2] = rgb[2]; d.data[i*4+3] = 255; }
+    x.putImageData(d, 0, 0);
+    // labels at centroids
+    const acc = {}; for (let i = 0; i < s.lab.length; i++) { const v = s.lab[i]; if (!v) continue; (acc[v] ||= [0,0,0]); acc[v][0] += i % s.width; acc[v][1] += Math.floor(i / s.width); acc[v][2]++; }
+    x.font = "9px monospace"; x.fillStyle = "#000"; Object.entries(acc).forEach(([v, a]) => { if (a[2] < 30) return; x.fillText(names[v].replace(/^right/, "R.").replace(/^left/, "L."), a[0] / a[2] - 12, a[1] / a[2]); });
+    const fig = document.createElement("figure"); fig.append(c); const cap = document.createElement("figcaption"); cap.textContent = frames[n]; fig.append(cap); document.body.append(fig);
+  }
+  document.title = "done";
+});
+function hsl(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return [f(0) * 255, f(8) * 255, f(4) * 255]; }
+</script>

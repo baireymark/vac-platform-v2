@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><title>calc check (temporary)</title>
+<style>html,body{margin:0;background:#444;display:flex;gap:10px;align-items:flex-start;padding:6px}iframe{display:block;border:0;transform-origin:0 0}.w{overflow:hidden}</style>
+<div class="w" style="width:768px;height:1100px"><iframe style="width:1280px;height:1830px;transform:scale(.6)"></iframe></div>
+<div class="w" style="width:234px;height:1300px"><iframe style="width:390px;height:2170px;transform:scale(.6)" data-m="1"></iframe></div>
+<div class="w" style="width:234px;height:1300px"><iframe style="width:390px;height:2170px;transform:scale(.6)" data-m="2"></iframe></div>
+<script>
+document.querySelectorAll("iframe").forEach(f => {
+  f.addEventListener("load", () => {
+    const w = f.contentWindow, d = w.document, $ = id => d.getElementById(id);
+    d.documentElement.style.scrollBehavior = "auto";
+    const go = () => {
+      if (!w.vacCalculator || !w.VAMath) return setTimeout(go, 100);
+      const C = w.vacCalculator;
+      const add = (sel, pct) => { C.select(sel); d.querySelectorAll(".sev__seg")[pct / 10 - 1].click(); $("addCond").click(); };
+      add({ type: "part", id: "leftKnee" }, 30); add({ type: "part", id: "rightAnkle" }, 20); add({ type: "cond", id: "tinnitus" }, 10); add({ type: "cond", id: "mentalHealth" }, 50);
+      C.select({ type: "part", id: "rightShoulder" });
+      $("spouse").click(); d.querySelector('[data-count="kids"][data-step="1"]').click(); d.querySelector('[data-count="kids"][data-step="1"]').click();
+      if (f.dataset.m !== "1") $("math").open = true;
+      const top = $("calculator").getBoundingClientRect().top + w.scrollY;
+      setTimeout(() => w.scrollTo(0, top + (f.dataset.m === "2" ? 1900 : f.dataset.m === "1" ? 1150 : 0)), 700);
+    };
+    go();
+  });
+  f.src = "/";
+});
+</script>
