@@ -534,7 +534,7 @@
     teaserEl = document.createElement('div');
     teaserEl.className = 'teaser';
     teaserEl.setAttribute('role', 'status');
-    teaserEl.innerHTML = 'Denied before, or never applied? I can check what you may qualify for in about a minute.<button class="x" aria-label="Dismiss">\u00D7</button>';
+    teaserEl.innerHTML = 'Hi, I’m ' + esc(cfg.botName) + '. Denied before, or never applied? I can check what you may qualify for in about a minute.<button class="x" aria-label="Dismiss">\u00D7</button>';
     teaserEl.addEventListener('click', function (e) {
       if (e.target.classList.contains('x')) { teaserEl.remove(); teaserEl = null; state.teaserSeen = true; persist(); e.stopPropagation(); return; }
       open();
