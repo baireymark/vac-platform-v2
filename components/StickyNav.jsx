@@ -2,20 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const links = [["#top", "Home"], ["#about", "About us"], ["#stories", "Stories"], ["#resources", "Resources"], ["#services", "Services"]];
+const links = [["#top", "Home"], ["#services", "Services"], ["#stories", "Stories"], ["#about", "About us"], ["#resources", "Resources"]];
 
 export default function StickyNav() {
   const [visible, setVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("#top");
   const bar = useRef(null);
+  const navigating = useRef(false);
+  const settleTimer = useRef(null);
 
   useEffect(() => {
     const heroNav = document.querySelector(".sec--hero .nav");
     if (!heroNav) return;
-    const update = () => {
+    const update = (selectSection = true) => {
       const stuck = heroNav.getBoundingClientRect().bottom <= 0;
       setVisible(stuck);
+      if (!selectSection || navigating.current) return;
       const height = bar.current?.getBoundingClientRect().height || 89;
       let current = "#top";
       let nearest = -Infinity;
@@ -26,6 +29,30 @@ export default function StickyNav() {
       }
       setActive(current);
     };
+    const finishNavigation = () => {
+      clearTimeout(settleTimer.current);
+      navigating.current = false;
+      update();
+    };
+    // Manual scrolling tracks sections; anchor scrolling holds the clicked selection.
+    const onScroll = () => {
+      update();
+      if (navigating.current) {
+        clearTimeout(settleTimer.current);
+        settleTimer.current = setTimeout(finishNavigation, 180);
+      }
+    };
+    const onResize = () => update();
+    const onNavigationClick = event => {
+      const href = event.target.closest("a")?.getAttribute("href");
+      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || !links.some(([target]) => target === href)) return;
+      navigating.current = true;
+      setActive(href);
+      clearTimeout(settleTimer.current);
+      settleTimer.current = setTimeout(finishNavigation, 350);
+    };
+    bar.current.addEventListener("click", onNavigationClick);
+    const currentBar = bar.current;
     const resize = new ResizeObserver(() => {
       document.documentElement.style.setProperty("--sticky-nav-height", `${bar.current?.getBoundingClientRect().height || 89}px`);
       update();
@@ -34,14 +61,18 @@ export default function StickyNav() {
     const originalMenu = document.getElementById("menu");
     const menuObserver = new MutationObserver(() => setOpen(!originalMenu.hidden));
     menuObserver.observe(originalMenu, { attributes: true, attributeFilter: ["hidden"] });
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    window.addEventListener("scrollend", finishNavigation);
     update();
     return () => {
       resize.disconnect();
       menuObserver.disconnect();
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      clearTimeout(settleTimer.current);
+      currentBar.removeEventListener("click", onNavigationClick);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scrollend", finishNavigation);
       document.documentElement.style.removeProperty("--sticky-nav-height");
     };
   }, []);
