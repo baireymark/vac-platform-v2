@@ -158,7 +158,7 @@
   document.querySelectorAll('[data-turn]').forEach(b => b.addEventListener('click', () => setAngle(el.body.azT * 180 / Math.PI + Number(b.dataset.turn)*22.5)));
   document.querySelectorAll('[data-model-sex]').forEach(b => b.addEventListener('click', () => {
     state.sex = b.dataset.modelSex;
-    el.body.setAttribute('model', '/assets/calculator/model-' + state.sex + '.js');
+    el.body.setAttribute('model', state.sex === 'female' ? '/assets/calculator/female-uniform.glb' : '/assets/calculator/model-male.js');
     document.querySelectorAll('[data-model-sex]').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
   }));
   function syncPicks() {
