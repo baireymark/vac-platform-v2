@@ -1,6 +1,7 @@
 // The VAC V4 homepage, converted from index.html. Every section is a server component;
 // the browser behaviour comes from the original scripts, loaded by LegacyScripts after hydration.
 import Hero from "@/components/Hero.jsx";
+import StickyNav from "@/components/StickyNav.jsx";
 import Calculator from "@/components/Calculator.jsx";
 import Intake from "@/components/Intake.jsx";
 import Routes from "@/components/Routes.jsx";
@@ -20,6 +21,7 @@ export default function Home() {
     <>
       <a className="skip" href="#main">Skip to content</a>
       <Hero />
+      <StickyNav />
       <main id="main">
         <Calculator />
         <Intake />
