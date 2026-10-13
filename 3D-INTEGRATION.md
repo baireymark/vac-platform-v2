@@ -22,6 +22,18 @@ Open http://localhost:4174. For production, run `npm run build` followed by `npm
 - `components/LegacyScripts.jsx` loads the 3D viewer before the calculator after hydration. The archived 2.5D script and frame images are no longer loaded.
 - `index.html` and the legacy server are updated to use the same viewer and calculator assets.
 
-## Validation
+## Uniform patches
+
+Both male and female models have an American flag fitted inside the original right shoulder Velcro tab, and a plain solid tan chest patch without any rank insignia. The existing left sleeve Velcro remains undecorated.
+
+The flag fills the entire traced Velcro face on both models, without a size cap or inset. The male model's original baked flag is replaced by a swatch of its own blank Velcro weave beneath the new flag. Patch masks are limited to the sleeve and torso regions so nearby atlas islands cannot color skin or hair.
+
+`addUniformPatches` in `public/assets/calculator/vac-body-map.js` uses an unlit photographic material with a separate transparent 4096×4096 patch atlas. The photographic base-color texture already contains lighting, so additional PBR lamps, normal-map lighting and tone-mapping exposure are bypassed for the model. Original base-color images and their sRGB settings are retained. Continuous inverse bilinear rasterization fits each flag into its Velcro quadrilateral without triangle antialias seams. Both atlas islands of the male chest tab receive the same plain tan color. No floating patch geometry or new external dependencies are required.
+
+The viewer uses sRGB output, a render pixel ratio of at least 1.5 (capped at 2), anisotropic texture filtering up to the GPU's limit (maximum 16), and restrained detail enhancement in linear light. Body-part hover, selection, condition tints and bilateral highlights are included in the photographic shader. The selected region receives only a subtle tint, so an unrated limb does not look overexposed. The supplied body textures are 1024×1024; this improves rendering and filtering but does not invent higher-resolution source detail.
+
+Verified: production build, existing smoke checks, both models viewed from the front and right side, plain chest panels, flag alignment on the shoulder tabs, rotation, and calculator interaction. Patches use the original body mesh, so body selection remains available over them.
+
+## Original integration validation
 
 Production build and platform smoke checks passed. Browser checks covered real WebGL model loading and ray clicks, all 30 body parts, adding/removing/clearing conditions, rating and pay updates, bilateral calculations, spouse changes, model switching, keyboard rotation, and desktop/mobile layout.
