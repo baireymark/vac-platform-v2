@@ -14,7 +14,7 @@ export default function Footer() {
           <div><p className="mono">Help</p><a className="mono-l" href="#services">Services</a><a className="mono-l" href="#resources">Resources</a><a className="mono-l" href="#faq">FAQ</a><a className="mono-l" href="#contact">Contact</a></div>
           <div><p className="mono">Reach</p><a className="mono-l" href="tel:+18778222023">+1 877-822-2023</a><a className="mono-l" href="mailto:info@vac2023.com">info@vac2023.com</a><a className="mono-l" href="https://www.facebook.com/veteransadvocatecenter">Facebook</a></div>
         </nav>
-        <p className="mono footer__legal">© 2025 VAC · <a href="https://veteransadvocatecenter.com/privacy-policy/">Privacy policy</a> · <a href="https://veteransadvocatecenter.com/terms-conditions/">Terms &amp; conditions</a></p>
+         <p className="mono footer__legal">© {new Date().getFullYear()} VAC · <a href="/privacy-policy">Privacy policy</a> · <a href="/terms-conditions">Terms &amp; conditions</a></p>
       </div>
     </footer>
   );
