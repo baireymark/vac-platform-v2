@@ -116,6 +116,41 @@ b { font-weight: 700; color: var(--navy); }
 .nav__links .nav__cta:hover { background: var(--red-d); }
 .nav__icon { display: none; }
 
+/* Figma 161:1404: compact bar, shown once the large hero navigation leaves view. */
+:root { --sticky-nav-height: 89px; }
+html { scroll-padding-top: calc(var(--sticky-nav-height) + 16px); }
+.sticky-nav { position: fixed; inset: 0 0 auto; z-index: 90; min-height: 89px; padding: 18px 36px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--navy); color: var(--white); box-shadow: 0 4px 20px #071d4926; visibility: hidden; transform: translateY(-100%); transition: transform .2s, visibility .2s; }
+.sticky-nav.is-visible { visibility: visible; transform: translateY(0); }
+.sticky-nav__logo { flex: none; }
+.sticky-nav__logo img { width: 157px; height: 53px; object-fit: contain; }
+.sticky-nav__actions, .sticky-nav__links, .sticky-nav__phone { display: flex; align-items: center; }
+.sticky-nav__actions, .sticky-nav__links { gap: 8.889px; }
+.sticky-nav a { text-decoration: none; }
+.sticky-nav__links a, .sticky-nav__cta { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 8.889px 14.222px; font: 700 14px/1.25 var(--sans); text-transform: uppercase; white-space: nowrap; border-radius: 2.667px; }
+.sticky-nav__links a:hover { background: #ffffff1f; }
+.sticky-nav__links a[aria-current] { box-shadow: inset 0 -2px var(--red); border-radius: 0; }
+.sticky-nav__phone { gap: 8px; padding: 0 12px; min-height: 44px; font: 700 14px/1.25 var(--sans); white-space: nowrap; }
+.sticky-nav__cta { background: var(--red); font-weight: 800; }
+.sticky-nav__cta:hover { background: var(--red-d); }
+.sticky-nav__toggle { display: none; width: 44px; height: 44px; border: 1px solid #ffffff80; border-radius: 3px; font-size: 24px; }
+@media (min-width: 861px) and (max-width: 1150px) {
+  .sticky-nav { padding-inline: 18px; gap: 10px; }
+  .sticky-nav__links, .sticky-nav__actions { gap: 2px; }
+  .sticky-nav__links a, .sticky-nav__cta { padding-inline: 8px; font-size: 12px; }
+  .sticky-nav__phone { padding-inline: 6px; font-size: 12px; }
+  .sticky-nav__logo img { width: 125px; height: auto; }
+}
+@media (max-width: 860px) {
+  .sticky-nav { padding: 0 16px; height: 84px; min-height: 84px; gap: 8px; }
+  .sticky-nav__logo { order: 1; display: flex; justify-content: center; flex: 1; min-width: 0; }
+  .sticky-nav__logo img { width: 65%; max-width: 163.02px; height: auto; }
+  .sticky-nav__actions { display: contents; }
+  .sticky-nav__links, .sticky-nav__cta, .sticky-nav__phone span { display: none; }
+  .sticky-nav__phone { order: 0; width: 44px; height: 44px; padding: 0; justify-content: center; flex: none; border: 1.5px solid #ffffff80; border-radius: 6px; }
+  .sticky-nav__toggle { order: 2; display: grid; place-items: center; flex: none; background: var(--red); border: 0; border-radius: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .sticky-nav { transition: none; } }
+
 .hero__brackets {
   position: absolute; z-index: 2; pointer-events: none;
   inset: calc(24 * var(--u)) calc(64 * var(--u)) auto; height: calc(874 * var(--u));

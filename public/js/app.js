@@ -6,11 +6,13 @@
   const menu = document.getElementById("menu");
   const openBtn = document.querySelector(".nav .nav__menu");
   const closeBtn = document.getElementById("menuClose");
+  let menuReturnFocus = openBtn;
   const setMenu = open => {
+    if (open) menuReturnFocus = document.activeElement;
     menu.hidden = !open;
     document.body.classList.toggle("menu-open", open);
     openBtn.setAttribute("aria-expanded", String(open));
-    (open ? closeBtn : openBtn).focus();
+    (open ? closeBtn : menuReturnFocus || openBtn).focus({ preventScroll: true });
   };
   openBtn?.addEventListener("click", () => setMenu(true));
   closeBtn?.addEventListener("click", () => setMenu(false));
