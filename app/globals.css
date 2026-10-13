@@ -133,11 +133,17 @@ html { scroll-padding-top: calc(var(--sticky-nav-height) + 16px); }
 .sticky-nav__cta { background: var(--red); font-weight: 800; }
 .sticky-nav__cta:hover { background: var(--red-d); }
 .sticky-nav__toggle { display: none; width: 44px; height: 44px; border: 1px solid #ffffff80; border-radius: 3px; font-size: 24px; }
-@media (min-width: 861px) and (max-width: 1150px) {
+@media (min-width: 861px) {
+  .sticky-nav__links a, .sticky-nav__cta { min-height: 52.8px; padding: 10.667px 17.066px; font-size: 16.8px; }
+  .sticky-nav__phone { min-height: 52.8px; font-size: 16.8px; }
+}
+@media (min-width: 861px) and (max-width: 1400px) {
   .sticky-nav { padding-inline: 18px; gap: 10px; }
   .sticky-nav__links, .sticky-nav__actions { gap: 2px; }
-  .sticky-nav__links a, .sticky-nav__cta { padding-inline: 8px; font-size: 12px; }
-  .sticky-nav__phone { padding-inline: 6px; font-size: 12px; }
+  .sticky-nav__actions { flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
+  .sticky-nav__links { flex-wrap: wrap; justify-content: flex-end; }
+  .sticky-nav__links a, .sticky-nav__cta { padding-inline: 9.6px; font-size: 14.4px; }
+  .sticky-nav__phone { padding-inline: 7.2px; font-size: 14.4px; }
   .sticky-nav__logo img { width: 125px; height: auto; }
 }
 @media (max-width: 860px) {
