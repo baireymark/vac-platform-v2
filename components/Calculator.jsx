@@ -47,6 +47,7 @@ export default function Calculator() {
           </div>
           <div className="pay-wrap">
             <div className="pay" id="pay" role="group" aria-labelledby="payLabel">
+              <span className="pay__mre" aria-hidden="true"><img src="/assets/img/mre.webp" width="640" height="976" alt="" loading="lazy" decoding="async" /></span>
               <p className="mono pay__label"><span id="payLabel">Est. monthly pay</span><span className="pay__live"><i aria-hidden="true"></i>2026 rates</span></p>
               <p className="pay__amount" aria-hidden="true"><span className="pay__dollars" id="payDollars">$0</span><span className="pay__tail"><span className="pay__cents" id="payCents">.00</span><span className="mono pay__per">/ mo</span></span></p>
               <p className="sr-only" id="payText">$0.00 a month</p>
