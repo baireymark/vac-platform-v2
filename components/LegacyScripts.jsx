@@ -5,7 +5,7 @@
 // with async = false.
 import { useEffect } from "react";
 
-const SCRIPTS = ["/js/va-math.js", "/assets/calculator/vac-body-map.js", "/js/calculator-3d.js", "/js/app.js", "/vac-chatbot.js"];
+const SCRIPTS = ["/js/va-math.js", "/assets/calculator/vac-body-map.js?v=supplied-female-1", "/js/calculator-3d.js?v=supplied-female-1", "/js/app.js", "/vac-chatbot.js"];
 
 let loaded = false; // Strict Mode runs effects twice in development
 
@@ -46,3 +46,8 @@ export default function LegacyScripts() {
   }, []);
   return null;
 }
+
+
+
+
+

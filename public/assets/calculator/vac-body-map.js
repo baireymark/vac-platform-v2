@@ -3704,15 +3704,14 @@ uniform vec3 uSelCol;
   else if (abs(vReg - uHov) < 0.5) totalEmissiveRadiance += vec3(0.11);`)},s.customProgramCacheKey=()=>"vacregion",s.needsUpdate=!0}function addUniformPatches(holder, modelPath, renderer, regionUniforms) {
   // Trace the INSIDE of the actual sewn Velcro borders in each original UV atlas.
   // Patches inherit the cloth's real geometry, folds, normal maps and lighting.
-  const panels = /female/i.test(modelPath) ? {
+  const panels = /female-uniform\.glb/i.test(modelPath) ? {} : /female/i.test(modelPath) ? {
     flag: [[290,387], [342,366], [352,385], [302,409]],
     chest: [[801,535], [829,537], [825,572], [796,568]],
   } : {
-    flag: [[608,991], [666,963], [683,985], [623,1018]],
+    flag: [[625,989], [659,971], [668,986], [628,1004]],
     flagBacking: [[608,978], [667,958], [686,987], [623,1023], [608,1023], [602,1001]],
     flagTail: [[604,996], [617,987], [625,1009], [624,1023], [609,1023]],
-    chest: [[804.5,106], [824,105], [824,140], [804.5,139]],
-    chestSeam: [[660,207], [680,204], [689,242], [677,247]],
+    leftVelcro: [[166,147], [198,116], [207,123], [216,121], [223,133], [193,166], [183,171], [167,157]],
   };
   function polygon(ctx, points) {
     ctx.beginPath(); points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y)); ctx.closePath();
@@ -3777,8 +3776,8 @@ uniform vec3 uSelCol;
     ctx.putImageData(pixels,x0,y0);
   }
   const flag = flagImage();
-  // The male chest tab straddles two separate atlas islands at the UV seam.
-  const rankPanels=[panels.chest,...(panels.chestSeam?[panels.chestSeam]:[])];
+  // Keep the male's original scanned rank tab; only the female has a blank tab.
+  const rankPanels=panels.chest?[panels.chest]:[];
   for(const mesh of holder.children) {
     const previous=mesh.material, original=previous.map;
     if(!original || !original.image) continue;
@@ -3806,11 +3805,15 @@ uniform vec3 uSelCol;
       cloth.getContext('2d').drawImage(original.image,954*sx,800*sy,18*sx,25*sy,0,0,18,25);
       ctx.fillStyle=ctx.createPattern(cloth,'repeat');
       polygon(ctx,panels.flagBacking);ctx.fill();polygon(ctx,panels.flagTail);ctx.fill();
+      // Restore blank woven Velcro over the left shoulder's baked black badge.
+      polygon(ctx,panels.leftVelcro);ctx.fill();
     }
     ctx.restore();
-    const orientation=[panels.flag[2],panels.flag[3],panels.flag[0],panels.flag[1]];
-    // Fill the entire traced Velcro face; do not inset or impose a patch size.
-    warp(ctx,flag,orientation);
+    if(panels.flag) {
+      const orientation=[panels.flag[2],panels.flag[3],panels.flag[0],panels.flag[1]];
+      // The supplied female GLB retains its own photographic patches.
+      warp(ctx,flag,orientation);
+    }
     const overlay=new Aa(canvas);overlay.flipY=false;overlay.colorSpace=at;overlay.anisotropy=anisotropy;
     material.onBeforeCompile=(shader,renderer)=>{
       Object.assign(shader.uniforms,regionUniforms);
@@ -3837,7 +3840,7 @@ uniform vec3 uSelCol;
           diffuseColor.rgb *= clamp(nativeSharp / max(nativeSample, vec3(0.002)), 0.90, 1.10);
           vec4 uniformPatch = texture2D(uUniformPatch, vMapUv);
           // Atlas islands can be adjacent: never apply a patch to skin or hair.
-          if (abs(vReg - 6.0) > 0.5 && abs(vReg) > 0.5 && abs(vReg - 4.0) > 0.5)
+          if (abs(vReg - 6.0) > 0.5 && abs(vReg - 5.0) > 0.5 && abs(vReg) > 0.5 && abs(vReg - 4.0) > 0.5)
             uniformPatch.a = 0.0;
           diffuseColor.rgb = mix(diffuseColor.rgb, uniformPatch.rgb, uniformPatch.a);
           vec4 tint = uTint[int(vReg + 0.5)];
